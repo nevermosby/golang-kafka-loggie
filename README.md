@@ -17,7 +17,7 @@ git clone https://github.com/loggie/loggie.git
 ```shell
 export GOOS="linux"
 export GOARCH="amd64"
-make build # you can get the executable file after about 5 mins
+make build # you can get the executable file "loggie" after about 5 mins
 ```
 3. create two basic configuration files
 ```yaml
@@ -57,5 +57,43 @@ pipelines:
 ```
 4. start the service
 ```shell
-> ./loggie -config.system=./loggie.yml -config.pipeline=./pipelines.yml
+> ./loggie -config.system=./loggie.yaml -config.pipeline=./pipelines.yaml
+
+2022-08-02 06:54:34 INF cmd/loggie/main.go:64 > version: main-ce454a8
+2022-08-02 06:54:34 INF cmd/loggie/main.go:73 > real GOMAXPROCS 2
+2022-08-02 06:54:34 INF cmd/loggie/main.go:76 > node name: api-ng
+2022-08-02 06:54:34 INF pkg/eventbus/center.go:124 > listener(filesource) start
+2022-08-02 06:54:34 INF pkg/eventbus/center.go:124 > listener(filewatcher) start
+2022-08-02 06:54:34 INF pkg/eventbus/center.go:124 > listener(reload) start
+2022-08-02 06:54:34 INF pkg/eventbus/center.go:124 > listener(sink) start
+2022-08-02 06:54:34 INF cmd/loggie/main.go:89 > pipelines config path: ./pipelines.yml
+2022-08-02 06:54:34 INF cmd/loggie/main.go:99 > initial pipelines:
+pipelines:
+- name: local
+  cleanDataTimeout: 5s
+  queue:
+    name: default
+    type: channel
+    batchSize: 2048
+  interceptors:
+  - type: metric
+  - type: maxbytes
+  - type: retry
+  sources:
+  - name: local-kafka
+    type: kafka
+    brokers:
+    - 127.0.0.1:9092
+    topic: purchases
+    fieldsUnderKey: fields
+  sink:
+    type: dev
+    printEvents: true
+    parallelism: 1
+    codec:
+      type: json
+      pretty: true
+2022-08-02 06:54:34 INF pkg/control/controller.go:61 > starting pipeline: local
+2022-08-02 06:54:34 INF pkg/sink/dev/sink.go:77 > sink/dev start
+...
 ```
