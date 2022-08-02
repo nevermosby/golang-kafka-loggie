@@ -1,0 +1,18 @@
+loggie:
+  monitor:
+    logger:
+      period: 30s
+      enabled: true
+    listeners:
+      filesource: ~
+      filewatcher: ~
+      reload: ~
+      sink: ~
+
+  reload:
+    enabled: true
+    period: 10s
+
+  http:
+    enabled: true
+    port: 9196

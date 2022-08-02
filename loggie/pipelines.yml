@@ -1,0 +1,13 @@
+pipelines:
+  - name: local
+    sources:
+      - type: kafka
+        name: local-kafka
+        brokers: ["127.0.0.1:9092"]
+        topic: purchases
+    sink:
+      type: dev
+      printEvents: true
+      codec:
+        pretty: true
+
